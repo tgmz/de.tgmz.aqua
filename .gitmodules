@@ -1,0 +1,6 @@
+[submodule "zowe"]
+	path = zowe
+	url = git@github.com:tgmz/de.tgmz.aqua.connection.zowe.git
+[submodule "zdev"]
+	path = zdev
+	url = git@github.com:tgmz/de.tgmz.zdev.git
