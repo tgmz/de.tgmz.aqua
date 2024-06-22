@@ -11,8 +11,8 @@
   *******************************************************************************/
 -->
 
-# ZOWE connector for IBM Aqua
+# z/OS Explorer Extensions Update Site
 
-Adds the ability to connect a z/OS Explorer (IBM Aqua 3.x) installation to an IBM mainframe entirely via REST (ZOWE).
-
-See this projects WIKI for further information.
+Builds a combined update site for
+* z/OS Explorer Development Capabilities
+* ZOWE Connector for z/OS Explorer
