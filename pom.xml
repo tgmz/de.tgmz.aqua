@@ -17,11 +17,11 @@
 
 	<groupId>de.tgmz</groupId>
 	<artifactId>de.tgmz.aqua</artifactId>
-	<version>1.0.4</version>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
-	<name>ZOWE Connector for IBM Aqua</name>
+	<name>z/OS Explorer Extensions Update Site</name>
 
-	<description>ZOWE for Aqua</description>
+	<description>Generate a combined p2 update site for z/OS explorer extensions on GitHub pages</description>
 
 	<inceptionYear>2024</inceptionYear>
 
@@ -34,13 +34,6 @@
 	<organization>
 		<name>Thomas Zierer</name>
 	</organization>
-
-	<distributionManagement>
-		<site>
-			<id>${project.artifactId}-site</id>
-			<url>file://${project.build.directory}/completesite</url>
-		</site>
-	</distributionManagement>
 
 	<developers>
 		<developer>
@@ -56,10 +49,6 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-version>3.0.4</tycho-version>
-		<java-version>1.8</java-version>
-		<jacoco.version>0.8.12</jacoco.version>
-		<sonar.java.source>1.8</sonar.java.source>
-		<sonar.exclusions>src/testresources/**/*.*</sonar.exclusions>
 	</properties>
 
 	<modules>
@@ -69,43 +58,6 @@
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.9</version>
-				<dependencies>
-					<dependency>
-						<groupId>commons-collections</groupId>
-						<artifactId>commons-collections</artifactId>
-						<version>3.2.2</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
-				<version>3.7.1</version>
-				<configuration>
-					<locales>de,en</locales>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>org.apache.maven.wagon</groupId>
-						<artifactId>wagon-webdav-jackrabbit</artifactId>
-						<version>3.4.0</version>
-					</dependency>
-					<dependency>
-						<groupId>commons-collections</groupId>
-						<artifactId>commons-collections</artifactId>
-						<version>3.2.2</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-versions-plugin</artifactId>
-				<version>${tycho-version}</version>
-			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-maven-plugin</artifactId>
@@ -124,21 +76,7 @@
 							<version>${project.version}</version>
 						</artifact>
 					</target>
-					<environments>
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86_64</arch>
-						</environment>
-						<!-- <environment>
-							<os>linux</os><ws>gtk</ws><arch>x86_64</arch></environment><environment>
-							<os>macosx</os><ws>cocoa</ws><arch>x86_64</arch></environment>-->
-					</environments>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.eclipse.tycho.extras</groupId>
-				<artifactId>target-platform-validation-plugin</artifactId>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.rat</groupId>
@@ -167,141 +105,17 @@
 					<excludes combine.children="append">
 						<exclude>**/target/**</exclude>
 						<exclude>**/bin/**</exclude>
+						<!-- Submodules -->
+						<exclude>zdev/**</exclude>
+						<exclude>zowe/**</exclude>
+						<exclude>.gitmodules</exclude>
 						<!-- Eclipse -->
-						<exclude>**/*.launch</exclude>
-						<exclude>**/.settings/**</exclude>
 						<exclude>**/.project</exclude>
-						<exclude>**/.classpath</exclude>
-						<!-- OSGI -->
-						<exclude>**/MANIFEST.MF</exclude>
-						<exclude>**/build.properties</exclude>
 						<!-- Tycho stuff -->
 						<exclude>**/.polyglot.*</exclude>
-						<!-- Test resources -->
-						<exclude>src/testresources/**</exclude>
-						<!-- Generated files -->
-						<exclude>**/*.jardesc</exclude>
-						<!-- Dummy stuff -->
-						<exclude>**/dummy.txt</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
 		</plugins>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.eclipse.tycho</groupId>
-					<artifactId>tycho-compiler-plugin</artifactId>
-					<version>${tycho-version}</version>
-					<configuration>
-						<useProjectSettings>false</useProjectSettings>
-						<encoding>${project.build.sourceEncoding}</encoding>
-						<source>${java-version}</source>
-						<target>${java-version}</target>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.eclipse.tycho</groupId>
-					<artifactId>tycho-surefire-plugin</artifactId>
-					<version>${tycho-version}</version>
-					<configuration>
-						<useJDK>${tycho-useJDK}</useJDK>
-						<useUIHarness>true</useUIHarness>
-						<includes>
-							<include>**/*Test.java</include>
-						</includes>
-						<!-- Kill test JVM if tests take more than 10 minutes (600 seconds) 
-							to finish -->
-						<forkedProcessTimeoutInSeconds>600</forkedProcessTimeoutInSeconds>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.eclipse.tycho.extras</groupId>
-					<artifactId>target-platform-validation-plugin</artifactId>
-					<version>${tycho-version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>build-helper-maven-plugin</artifactId>
-					<version>3.4.0</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
-
-	<profiles>
-		<profile>
-			<id>cc</id>
-			<properties>
-				<!-- Properties to enable jacoco code coverage analysis -->
-				<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
-				<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-				<sonar.coverage.jacoco.xmlReportPaths>../de.tgmz.aqua.connection.zowe.test/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-				<sonar.coverage.exclusions>**/test/**</sonar.coverage.exclusions>
-			</properties>
-			<build>
-				<plugins>
-					<!-- Enabling use of jacoco -->
-					<plugin>
-						<groupId>org.jacoco</groupId>
-						<artifactId>jacoco-maven-plugin</artifactId>
-						<version>${jacoco.version}</version>
-						<executions>
-							<execution>
-								<id>prepare-agent</id>
-								<goals>
-									<goal>prepare-agent</goal>
-								</goals>
-							</execution>
-							<execution>
-								<id>report</id>
-								<goals>
-									<goal>report-aggregate</goal>
-								</goals>
-								<phase>verify</phase>
-								<configuration>
-									<formats>
-										<format>XML</format>
-									</formats>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>odc</id>
-			<properties>
-				<sonar.dependencyCheck.htmlReportPath>${project.build.directory}/dependency-check-report.html</sonar.dependencyCheck.htmlReportPath>
-			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.owasp</groupId>
-						<artifactId>dependency-check-maven</artifactId>
-						<version>9.2.0</version>
-						<configuration>
-							<assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
-							<failBuildOnCVSS>9.9</failBuildOnCVSS>
-							<failOnError>true</failOnError>
-							<nvdApiKey>${nvdApiKey}</nvdApiKey>
-							<formats>
-								<format>HTML</format>
-							</formats>
-						</configuration>
-						<executions>
-							<execution>
-								<id>dependency-check</id>
-								<phase>package</phase>
-								<goals>
-									<goal>aggregate</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 </project>

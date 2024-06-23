@@ -6,6 +6,8 @@
   * which accompanies this distribution, and is available at
   * http://www.eclipse.org/legal/epl-v20.html
   *
+  * SPDX-License-Identifier: EPL-2.0
+  *
   * Contributors:
   *    Thomas Zierer - initial API and implementation and/or initial documentation
   *******************************************************************************/
