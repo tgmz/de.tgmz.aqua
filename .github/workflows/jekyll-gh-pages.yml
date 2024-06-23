@@ -45,14 +45,23 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Build ZOWE connector
-        run: mvn -B install -DskipTests=true --file zowe/de.tgmz.aqua.zowe/pom.xml
-
       - name: Build z/OS Explorer extensions
         run: mvn -B install -Djcs.skip=true -DskipTests=true -pl -de.tgmz.zdev.product --file zdev/de.tgmz.zdev/pom.xml
 
+      - name: Build ZOWE connector
+        run: mvn -B install -DskipTests=true --file zowe/de.tgmz.aqua.zowe/pom.xml
+
       - name: Build update site
         run: mvn -B package --file pom.xml
+
+      - name: Generate index.html  
+        run: |
+          pwd
+          ls
+          ls -l $ROOT_PUBLISH
+          echo "<html><table>" > $ROOT_PUBLISH/index.html
+          find $ROOT_PUBLISH -maxdepth 1 -printf "<tr><td><a href=\"%f\">%f</a></td><td>%s</td><td>%Tc</td></tr>\n" >> $ROOT_PUBLISH/index.html
+          echo "</table></html>" >> $ROOT_PUBLISH/index.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
