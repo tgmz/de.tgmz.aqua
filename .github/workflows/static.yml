@@ -59,11 +59,9 @@ jobs:
 
       - name: Generate index.html  
         run: |
-          ls $ROOT_PUBLISH
           echo "<html><table>" > $ROOT_PUBLISH/index.html
           find $ROOT_PUBLISH -maxdepth 1 -printf "<tr><td><a href=\"%f\">%f</a></td><td>%s</td><td>%Tc</td></tr>\n" >> $ROOT_PUBLISH/index.html
           echo "</table></html>" >> $ROOT_PUBLISH/index.html
-          ls -l $ROOT_PUBLISH
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
