@@ -48,11 +48,21 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Setup keytore
+        shell: bash
+        env:
+          FS_KEYSTORE_FILE: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          echo "Convert base64 strings to files"
+          echo "$FS_KEYSTORE_FILE" >> $RUNNER_TEMP/keystore.jks.base64
+          echo "decoding..."
+          base64 --decode $RUNNER_TEMP/keystore.jks.base64 > $RUNNER_TEMP/keystore.jks
+
       - name: Build z/OS Explorer extensions
-        run: mvn -B install -Djcs.skip=true -DskipTests=true -pl -de.tgmz.zdev.product --file zdev/de.tgmz.zdev/pom.xml
+        run: mvn -B install -DskipTests=true -Djcs.skip=false -Djcs.keystore=${{ runner.temp }}/keystore.jks -Djcs.alias=${{ secrets.ALIAS }} -Djcs.storepass=${{ secrets.STOREPASS }} -Djcs.keypass=${{ secrets.KEYPASS }} -pl -de.tgmz.zdev.product --file zdev/de.tgmz.zdev/pom.xml
 
       - name: Build ZOWE connector
-        run: mvn -B install -Djcs.skip=true -DskipTests=true --file zowe/de.tgmz.aqua.zowe/pom.xml
+        run: mvn -B install -DskipTests=true -Djcs.skip=false -Djcs.keystore=${{ runner.temp }}/keystore.jks -Djcs.alias=${{ secrets.ALIAS }} -Djcs.storepass=${{ secrets.STOREPASS }} -Djcs.keypass=${{ secrets.KEYPASS }} --file zowe/de.tgmz.aqua.zowe/pom.xml
 
       - name: Build update site
         run: mvn -B package --file pom.xml
