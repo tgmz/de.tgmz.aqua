@@ -113,6 +113,8 @@
 						<exclude>**/.project</exclude>
 						<!-- Tycho stuff -->
 						<exclude>**/.polyglot.*</exclude>
+						<!-- Only maven 4 supports '#'-comments in jvm.config -->
+						<exclude>.mvn/jvm.config</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
